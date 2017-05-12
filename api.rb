@@ -1,5 +1,6 @@
-require 'sinatra'
-require 'wiringpi'
+require 'bundler'
+Bundler.setup
+Bundler.require
 
 class RelayAPI < Sinatra::Base
 
@@ -17,8 +18,9 @@ class RelayAPI < Sinatra::Base
 
   get '/status' do
     PINS.each do |pin|
-      "Pin #{pin} is #{convert_on_off(gpio_status(pin))}"
+      puts "Pin #{pin} is #{convert_on_off(gpio_status(pin))}"
     end
+    true
   end
 
   post '/change/:pin_number/:action' do
