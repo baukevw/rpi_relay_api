@@ -24,7 +24,7 @@ class RelayAPI < Sinatra::Base
   end
 
   post '/change/:pin_number/:action' do
-    change_pin(params[:pin_number], params[:action])
+    change_pin(params[:pin_number].to_i, params[:action])
   end
 
   def gpio_status(pin_number)
