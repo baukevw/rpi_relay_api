@@ -6,4 +6,4 @@ git_source(:github) do |repo_name|
 end
 
 gem 'sinatra'
-gem 'pi_piper'
+gem 'wiringpi2'
