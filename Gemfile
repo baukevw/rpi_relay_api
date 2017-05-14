@@ -7,4 +7,4 @@ end
 
 gem 'sinatra'
 gem 'puma'
-gem 'wiringpi2'
+gem 'pi_piper'
