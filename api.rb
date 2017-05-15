@@ -1,6 +1,11 @@
 require 'sinatra'
 require 'pi_piper'
 
+# Sinatra configuration
+configure do
+  set :views, File.join(Sinatra::Application.root, "views")
+end
+
 class RelayAPI < Sinatra::Base
   include PiPiper
 
@@ -10,7 +15,7 @@ class RelayAPI < Sinatra::Base
   end
 
   get '/' do
-    "RPI Relay API"
+    erb :index
   end
 
   get '/status' do
