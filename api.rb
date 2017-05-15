@@ -4,6 +4,7 @@ require 'pi_piper'
 # Sinatra configuration
 configure do
   set :views, File.join(Sinatra::Application.root, "views")
+  Tilt.register Tilt::ERBTemplate, 'html.erb'
 end
 
 class RelayAPI < Sinatra::Base
