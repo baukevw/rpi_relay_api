@@ -1,5 +1,5 @@
 <% PINS.each_with_index do |pin_id, index| %>
   <p>
-    <%= eval("PIN_#{index}").inspect %>
+    <%= "Pin #{index} is currently #{convert_on_off(eval("PIN_#{index}").read)}" %>
   </p>
 <% end %>
