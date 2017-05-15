@@ -21,7 +21,7 @@ class RelayAPI < Sinatra::Base
 
   get '/status' do
     puts "Pin #{PIN_0.inspect} is #{convert_on_off(PIN_0.read)}"
-    200
+    erb :status
   end
 
   post '/change/:pin_number/:action' do
