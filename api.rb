@@ -23,7 +23,7 @@ class RelayAPI < Sinatra::Base
     erb :status
   end
 
-  post '/change/:pin_number/:action' do
+  post '/change/' do
     selected_pin = eval("PIN_#{params[:pin_number]}")
     return 200 if change_pin(selected_pin, params[:action])
     400
