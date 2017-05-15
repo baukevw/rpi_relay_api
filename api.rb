@@ -4,14 +4,17 @@ require 'pi_piper'
 class RelayAPI < Sinatra::Base
   include PiPiper
 
-  PIN_0 = PiPiper::Pin.new(:pin => 17, :direction => :out)
+  PINS = [17,8,27,22,23,24, 25, 04]
+  PINS.each_with_index do |pin_id, index|
+    eval("PIN_#{index} = PiPiper::Pin.new(pin: #{pin_id}, direction: :out")
+  end
 
   get '/' do
     "RPI Relay API"
   end
 
   get '/status' do
-    puts "Pin #{PIN_0} is #{convert_on_off(PIN_0.read)}"
+    puts "Pin #{PIN_0.inspect} is #{convert_on_off(PIN_0.read)}"
     true
   end
 
