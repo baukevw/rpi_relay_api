@@ -25,13 +25,14 @@ class RelayAPI < Sinatra::Base
   end
 
   post '/change/' do
+    puts request.body
     selected_pin = eval("PIN_#{params[:pin_number]}")
     if change_pin(selected_pin, params[:action])
       status 200
-      return { 'Status' => '200' }
+      return { 'Status' => '200' }.to_json
     else
       status 400
-      return { 'Status' => '400' }
+      return { 'Status' => '400' }.to_json
     end
   end
 
