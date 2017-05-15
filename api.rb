@@ -28,6 +28,7 @@ class RelayAPI < Sinatra::Base
     if action == 'on'
       selected_pin.on
       return true
+    end
     if action == 'off'
       selected_pin.off
       return true
