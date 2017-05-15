@@ -1,3 +1,5 @@
-<% PINS.each do |pin| %>
-  <%= pin %>
+<% PINS.each_with_index do |pin_id, index| %>
+  <p>
+    <%= eval("PIN_#{index}").inspect %>
+  </p>
 <% end %>
