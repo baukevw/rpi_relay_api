@@ -15,19 +15,24 @@ class RelayAPI < Sinatra::Base
 
   get '/status' do
     puts "Pin #{PIN_0.inspect} is #{convert_on_off(PIN_0.read)}"
-    true
+    200
   end
 
   post '/change/:pin_number/:action' do
-    change_pin(params[:pin_number].to_i, params[:action])
+    selected_pin = eval("PIN_#{params[:pin_number]}")
+    return 200 if change_pin(selected_pin, params[:action])
+    400
   end
 
-  def change_pin(pin_number, action)
+  def change_pin(selected_pin, action)
     if action == 'on'
-      PIN_0.on
-    else
-      PIN_0.off
+      selected_pin.on
+      return true
+    if action == 'off'
+      selected_pin.off
+      return true
     end
+    false
   end
 
   def convert_on_off(value)
