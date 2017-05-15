@@ -24,7 +24,15 @@ class RelayAPI < Sinatra::Base
     erb :status
   end
 
-  post '/change/' do
+  get '/api/status/' do
+    output = Hash.new
+    PINS.each_with_index do |pin_id, index|
+      output.store(index.to_s, eval("PIN_#{index}").read.to_s)
+    end
+    output.to_json
+  end
+
+  post '/api/change/' do
     puts request.body
     selected_pin = eval("PIN_#{params[:pin_number]}")
     if change_pin(selected_pin, params[:action])
