@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'json'
 require 'pi_piper'
+require 'config/puma'
 
 # Sinatra configuration
 configure do
