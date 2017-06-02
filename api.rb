@@ -44,15 +44,6 @@ class RelayAPI < Sinatra::Base
     end
   end
 
-  watch :pin => 26 do
-    if value == 1
-      PIN_0.on
-    else
-      PIN_0.off
-    end
-  end
-
-
   def change_pin(selected_pin, action)
     if action == 'on'
       selected_pin.on
