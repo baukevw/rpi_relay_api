@@ -58,7 +58,7 @@ class RelayAPI < Sinatra::Base
   end
 
   def convert_on_off(value)
-    return 'on' if value == 1
+    return 'on' if value == 0
     'off'
   end
 end
