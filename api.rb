@@ -13,7 +13,8 @@ class RelayAPI < Sinatra::Base
 
   PINS = [17,18,27,22,23,24,25,4]
   PINS.each_with_index do |pin_id, index|
-    eval("PIN_#{index} = PiPiper::Pin.new(pin: #{pin_id}, direction: :out, invert: true)")
+    eval("PIN_#{index} = PiPiper::Pin.new(pin: #{pin_id}, direction: :out)")
+    eval("PIN_#{index}.on")
   end
 
   get '/' do
@@ -46,11 +47,11 @@ class RelayAPI < Sinatra::Base
 
   def change_pin(selected_pin, action)
     if action == 'on'
-      selected_pin.on
+      selected_pin.off
       return true
     end
     if action == 'off'
-      selected_pin.off
+      selected_pin.on
       return true
     end
     false
