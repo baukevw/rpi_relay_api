@@ -13,7 +13,7 @@ class RelayAPI < Sinatra::Base
 
   PINS = [17,18,27,22,23,24,25,4]
   PINS.each_with_index do |pin_id, index|
-    eval("PIN_#{index} = PiPiper::Pin.new(pin: #{pin_id}, direction: :out)")
+    eval("PIN_#{index} = PiPiper::Pin.new(pin: #{pin_id}, direction: :in)")
   end
 
   get '/' do
