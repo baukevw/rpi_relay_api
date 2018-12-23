@@ -1,6 +1,8 @@
 require 'sinatra'
 require 'json'
 require 'pi_piper'
+require 'httparty'
+require 'dotenv'
 
 # Sinatra configuration
 configure do
@@ -12,6 +14,7 @@ class RelayAPI < Sinatra::Base
   include PiPiper
 
   PINS = [17,18,27,22,23,24,25,4]
+
   PINS.each_with_index do |pin_id, index|
     eval("PIN_#{index} = PiPiper::Pin.new(pin: #{pin_id}, direction: :out)")
     eval("PIN_#{index}.on")
@@ -48,10 +51,12 @@ class RelayAPI < Sinatra::Base
   def change_pin(selected_pin, action)
     if action == 'on'
       selected_pin.off
+      send_notification(selected_pin, action)
       return true
     end
     if action == 'off'
       selected_pin.on
+      send_notification(selected_pin, action)
       return true
     end
     false
@@ -60,5 +65,13 @@ class RelayAPI < Sinatra::Base
   def convert_on_off(value)
     return 'on' if value == 0
     'off'
+  end
+
+  def send_notification(pin, action)
+    if HTTParty.post(
+        ENV["NOTIFY_WEBHOOK_URL"],
+        { :body => {"type" => "change", "pin_number" => "#{pin}", "action" => "#{action}" }}
+      )
+    end
   end
 end

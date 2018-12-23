@@ -4,3 +4,4 @@
 !/log/.keep
 !/tmp/.keep
 !/tmp/pids/.keep
+.env
