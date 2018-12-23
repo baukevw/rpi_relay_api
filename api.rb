@@ -71,7 +71,7 @@ class RelayAPI < Sinatra::Base
   def send_notification(pin, action)
     HTTParty.post(
         ENV["NOTIFY_WEBHOOK_URL"],
-        { :rpi_relay_api => {"type" => "change", "pin_number" => "#{pin}", "action" => "#{action}" }}
+        { :body => { "rpi_relay_api" => { "type" => "change", "pin_number" => "#{pin}", "action" => "#{action}" }}}
       )
   end
 end
