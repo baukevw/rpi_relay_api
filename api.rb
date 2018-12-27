@@ -8,11 +8,11 @@ class RelayAPI < Sinatra::Base
   Dotenv.load
 
   before do
-    halt 401 unless request.env["HTTP_AUTHORIZATION"] == ENV['AUTHORIZATION_KEY']
+    content_type :json
+    halt 401, { 'Status' => '401' }.to_json unless request.env["HTTP_AUTHORIZATION"] == ENV['AUTHORIZATION_KEY']
   end
 
   include PiPiper
-
 
   PINS = [17,18,27,22,23,24,25,4]
 
@@ -30,13 +30,16 @@ class RelayAPI < Sinatra::Base
   end
 
   post '/api/change/' do
-    selected_pin = eval("PIN_#{params[:pin_number]}")
-    if change_pin(selected_pin, params[:action])
-      send_notification(params[:pin_number], params[:action])
+    payload = params
+    payload = JSON.parse(request.body.read).symbolize_keys unless params[:path]
+
+    selected_pin = eval("PIN_#{payload[:pin_number]}")
+    if change_pin(selected_pin, payload[:action])
+      send_notification(payload[:pin_number], payload[:action])
       status 200
       return { 'Status' => '200' }.to_json
     else
-      send_notification(params[:pin_number], params[:action])
+      send_notification(payload[:pin_number], payload[:action])
       status 400
       return { 'Status' => '400' }.to_json
     end
