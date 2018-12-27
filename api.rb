@@ -8,7 +8,7 @@ class RelayAPI < Sinatra::Base
   Dotenv.load
 
   before do
-    error 401 unless request.env["HTTP_AUTHORIZATION"] == ENV['AUTHORIZATION_KEY']
+    halt 401 unless request.env["HTTP_AUTHORIZATION"] == ENV['AUTHORIZATION_KEY']
   end
 
   include PiPiper
