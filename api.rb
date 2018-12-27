@@ -31,7 +31,7 @@ class RelayAPI < Sinatra::Base
 
   post '/api/change/' do
     payload = params
-    payload = JSON.parse(request.body.read).symbolize_keys unless params[:path]
+    payload = JSON.parse(request.body.read, symbolize_names: true) unless params[:path]
 
     selected_pin = eval("PIN_#{payload[:pin_number]}")
     if change_pin(selected_pin, payload[:action])
