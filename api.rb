@@ -4,29 +4,21 @@ require 'pi_piper'
 require 'httparty'
 require 'dotenv'
 
-# Sinatra configuration
-configure do
-  set :views, File.join(Sinatra::Application.root, "views")
-  Tilt.register Tilt::ERBTemplate, 'html.erb'
-end
-
 class RelayAPI < Sinatra::Base
-  include PiPiper
   Dotenv.load
+
+  before do
+    error 401 unless request.env["HTTP_AUTHORIZATION"] == ENV['AUTHORIZATION_KEY']
+  end
+
+  include PiPiper
+
 
   PINS = [17,18,27,22,23,24,25,4]
 
   PINS.each_with_index do |pin_id, index|
     eval("PIN_#{index} = PiPiper::Pin.new(pin: #{pin_id}, direction: :out)")
     eval("PIN_#{index}.on")
-  end
-
-  get '/' do
-    erb :index
-  end
-
-  get '/status' do
-    erb :status
   end
 
   get '/api/status/' do
@@ -38,7 +30,6 @@ class RelayAPI < Sinatra::Base
   end
 
   post '/api/change/' do
-    puts request.body
     selected_pin = eval("PIN_#{params[:pin_number]}")
     if change_pin(selected_pin, params[:action])
       send_notification(params[:pin_number], params[:action])
