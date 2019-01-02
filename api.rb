@@ -30,7 +30,9 @@ class RelayAPI < Sinatra::Base
   before do
     response.headers["Access-Control-Allow-Origin"] = "*"
     content_type :json
-    halt 401, { 'Status' => '401' }.to_json unless request.env["HTTP_AUTHORIZATION"] == ENV['AUTHORIZATION_KEY']
+    unless request.request_method == 'OPTIONS'
+      halt 401, { 'Status' => '401' }.to_json unless request.env["HTTP_AUTHORIZATION"] == ENV['AUTHORIZATION_KEY']
+    end
   end
 
   include PiPiper
