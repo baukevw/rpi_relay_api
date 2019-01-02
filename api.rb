@@ -26,6 +26,7 @@ class RelayAPI < Sinatra::Base
     if request.request_method == 'OPTIONS'
       response.headers["Access-Control-Allow-Origin"] = "*"
       response.headers["Access-Control-Allow-Methods"] = ["GET", "POST"]
+      response.headers["Access-Control-Allow-Headers"] = ["Authorization", "Content-Type"]
       halt 200
     end
     content_type :json
