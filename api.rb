@@ -23,12 +23,11 @@ class RelayAPI < Sinatra::Base
     end
   end
 
-  set :allow_origin, :any
-  set :allow_methods, [:get, :post, :options]
-  set :expose_headers, ['Content-Type', 'Authorization']
-
   before do
     response.headers["Access-Control-Allow-Origin"] = "*"
+    response.headers["Allow"] = "GET,POST,OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization"
+
     content_type :json
     unless request.request_method == 'OPTIONS'
       halt 401, { 'Status' => '401' }.to_json unless request.env["HTTP_AUTHORIZATION"] == ENV['AUTHORIZATION_KEY']
@@ -54,11 +53,11 @@ class RelayAPI < Sinatra::Base
 
   get '/api/status/pin/' do
     payload = params
-    payload = JSON.parse(request.body.read, symbolize_names: true) unless params[:path]
+    payload = JSON.parse(request.body.read, symbolize_names: true) unless params[:pin_number]
 
     output = Hash.new
     selected_pin = eval("PIN_#{payload[:pin_number]}")
-    output.store(payload[:pin_number], convert_on_off(selected_pin.read.to_s))
+    output.store(payload[:pin_number], convert_on_off(selected_pin.read))
     output.to_json
   end
 
@@ -78,9 +77,7 @@ class RelayAPI < Sinatra::Base
     end
   end
 
-  options "*" do
-    response.headers["Allow"] = "GET,POST,OPTIONS"
-    response.headers["Access-Control-Allow-Headers"] = "X-Requested-With, X-HTTP-Method-Override, Content-Type, Cache-Control, Accept, Authorization"
+  options '*' do
     status 200
   end
 
