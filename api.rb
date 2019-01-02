@@ -3,9 +3,24 @@ require 'json'
 require 'pi_piper'
 require 'httparty'
 require 'dotenv'
+require 'logger'
+
+FILE = File.new("#{settings.root}/log/#{settings.environment}.log", 'a+')
+LOGGER = Logger.new(FILE)
 
 class RelayAPI < Sinatra::Base
   Dotenv.load
+
+  configure do
+    enable :logging
+
+    FILE.sync = true
+    use Rack::CommonLogger, FILE
+
+    LOGGER.formatter = proc do |severity, datetime, progname, msg|
+       "LOG: #{msg}\n"
+    end
+  end
 
   before do
     content_type :json
@@ -54,6 +69,8 @@ class RelayAPI < Sinatra::Base
       return { 'Status' => '400' }.to_json
     end
   end
+
+  private
 
   def change_pin(selected_pin, action)
     if action == 'on'
