@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/cross_origin'
 require 'json'
 require 'pi_piper'
 require 'httparty'
@@ -13,6 +14,7 @@ class RelayAPI < Sinatra::Base
 
   configure do
     enable :logging
+    enable :cross_origin
 
     FILE.sync = true
     use Rack::CommonLogger, FILE
@@ -23,12 +25,7 @@ class RelayAPI < Sinatra::Base
   end
 
   before do
-    if request.request_method == 'OPTIONS'
-      response.headers["Access-Control-Allow-Origin"] = "*"
-      response.headers["Access-Control-Allow-Methods"] = ["GET", "POST"]
-      response.headers["Access-Control-Allow-Headers"] = ["Authorization", "Content-Type"]
-      halt 200
-    end
+    response.headers["Access-Control-Allow-Origin"] = "*"
     content_type :json
     halt 401, { 'Status' => '401' }.to_json unless request.env["HTTP_AUTHORIZATION"] == ENV['AUTHORIZATION_KEY']
   end
@@ -74,6 +71,13 @@ class RelayAPI < Sinatra::Base
       status 400
       return { 'Status' => '400' }.to_json
     end
+  end
+
+  options "*" do
+    response.headers["Allow"] = "GET, POST, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = "Authorization, Content-Type"
+    response.headers["Access-Control-Allow-Origin"] = "*"
+    200
   end
 
   private
