@@ -23,6 +23,11 @@ class RelayAPI < Sinatra::Base
   end
 
   before do
+    if request.request_method == 'OPTIONS'
+      response.headers["Access-Control-Allow-Origin"] = "*"
+      response.headers["Access-Control-Allow-Methods"] = ["GET", "POST"]
+      halt 200
+    end
     content_type :json
     halt 401, { 'Status' => '401' }.to_json unless request.env["HTTP_AUTHORIZATION"] == ENV['AUTHORIZATION_KEY']
   end
